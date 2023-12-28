@@ -9,11 +9,17 @@ import { ProductCategory } from '../common/product-category';
   providedIn: 'root'
 })
 export class ProductService {
+  
   private categoryURL = "http://localhost:1235/api/product-category"; // Spring Boot URL
   private baseUrl = 'http://localhost:1235/api/products'; // Spring Boot URL
 
   constructor(private httpClient: HttpClient) { }
 
+  getProduct(theProductId: number): Observable<Product> {
+    const productUrl = `${this.baseUrl}/${theProductId}`;
+    return this.httpClient.get<Product>(productUrl);
+  }
+  
   // Returns an Observable of an array of ProductCategory objects
   getProductCategories(): Observable<ProductCategory[]> {
     return this.httpClient.get<GetResponseProductCategory>(this.categoryURL).pipe(
@@ -35,9 +41,9 @@ export class ProductService {
 
   // Returns an Observable of an array of Product objects based on the provided category id
   getProductList(id: number): Observable<Product[]> {
-    const searchUrl = `${this.baseUrl}/search/findByCategoryId?id=${id}`;
-    console.log('Request URL:', searchUrl);
-    return this.getProducts(searchUrl);
+    const productListUrl = `${this.baseUrl}/search/findByCategoryId?id=${id}`;
+    console.log('Request URL:', productListUrl);
+    return this.getProducts(productListUrl);
   }
 }
 

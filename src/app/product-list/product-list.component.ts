@@ -10,7 +10,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class ProductListComponent implements OnInit {
   products: Product[] = [];
-  currentCategoryId: number = -1; // Set default category id to -1
+  currentCategoryId: number = 1; // Set default category id to 1
   searchMode: boolean = false;
   keyword: string = ''; // Add this property
 
@@ -44,6 +44,16 @@ export class ProductListComponent implements OnInit {
   }
 
   handleListProducts() {
+    // Check if the route has a category id parameter
+    const categoryIdParam = this.route.snapshot.paramMap.get('id');
+    
+    // Update the currentCategoryId only if the categoryIdParam is not null
+    if (categoryIdParam) {
+      this.currentCategoryId = +categoryIdParam;
+    } else {
+      this.currentCategoryId = 1; // Set default category id to 1
+    }
+    
     this.productService.getProductList(this.currentCategoryId).subscribe((data) => {
       this.products = data;
     });

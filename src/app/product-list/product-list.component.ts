@@ -14,6 +14,11 @@ export class ProductListComponent implements OnInit {
   searchMode: boolean = false;
   keyword: string = ''; // Add this property
 
+  //new properties for pagination
+  thePageNumber: number = 1;
+  thePageSize: number = 10;
+  theTotalElements: number = 0;
+
   constructor(
     private productService: ProductService,
     private route: ActivatedRoute
@@ -56,6 +61,19 @@ export class ProductListComponent implements OnInit {
     
     this.productService.getProductList(this.currentCategoryId).subscribe((data) => {
       this.products = data;
+    
+      //Added code for pagination func
+      this.productService.getProductListPaginate(this.thePageNumber -1,
+        this.thePageSize, this.currentCategoryId). subscribe(
+          //Process the results that comes from the backend
+          //everything on RHS is data from spring data rest json
+          data => {
+            this.products = data._embedded.products;
+            this.thePageNumber = data.page.number + 1;
+            this.thePageSize = data.page.size;
+            this.theTotalElements = data.page.totalElements;
+          }
+        )
     });
   }
 }

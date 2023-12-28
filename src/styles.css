@@ -765,10 +765,10 @@ a.primary-btn:hover{
  */
 
 footer ul li a{
-    color:#fff
+    color: #bbb lack;
 }
 footer{
-    background:#232324;
+    background:transparent;
     z-index:1;
     position:relative;
     text-align:center
@@ -782,6 +782,19 @@ footer ul li{
     font-size:14px;
     padding:10px 20px
 }
+
+/* 
+ * ----------------------------
+ * Pagination section
+ * ----------------------------
+ */
+ .fixed-pagination {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    z-index: 19999; /* Adjust the z-index value if needed */
+  }
+  
 
 /* 
  * ----------------------------

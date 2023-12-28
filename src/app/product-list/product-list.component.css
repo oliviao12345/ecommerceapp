@@ -1,0 +1,52 @@
+/* Style the container */
+.container-fluid {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 0; /* Remove the default margin */
+  }
+
+/* Style each product box */
+.product-box {
+    padding: 10px;
+    box-sizing: border-box;
+    text-align: center; /* Center the content within the container */
+    height: 300px; /* Set a fixed height for the container */
+  } 
+  
+  /* Style the image */
+  .product-box img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* Preserve the aspect ratio and fit the image within the container */
+  }
+  
+  
+  /* Style the product name */
+  .product-box h1 {
+    font-size: 16px;
+    margin: 10px 0;
+  }
+  
+  /* Style the price */
+  .product-box .price {
+    font-size: 14px;
+    color: #888;
+  }
+  
+  /* Clear any additional styles applied to the row */
+  .row::after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+  
+  /* Style the "Add to cart" button */
+.primary.button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: blue;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+  }
+  

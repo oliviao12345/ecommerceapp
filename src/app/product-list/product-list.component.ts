@@ -52,7 +52,22 @@ export class ProductListComponent implements OnInit {
   handleSearchProducts() {
     this.productService.searchProducts(this.keyword).subscribe((data) => {
       this.products = data;
+
+      //Pagination code to handle search products
+      this.productService.searchProductsPaginate(this.thePageNumber -1,
+        this.thePageSize, this.keyword).subscribe(this.processResult());
     });
+  }
+
+  //Helper method
+  private processResult(){
+    return (data: any) =>{
+      this.products = data._embedded.products;
+      this.thePageNumber = data.page.number + 1;
+      this.thePageSize = data.page.size;
+      this.theTotalElements = data.page.totalElements;
+
+    }
   }
 
   handleListProducts() {

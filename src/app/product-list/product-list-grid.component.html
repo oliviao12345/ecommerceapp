@@ -38,6 +38,22 @@
              class = "fixed-pagination">
           </ngb-pagination>
         </div>
+
+        <div class = "col-md-3 mt-2" style="position: fixed; bottom:0; left: 0;">
+            <span class="mr-2"> Page Size </span>
+            <select #myPageSelect (change)="updatePageSize(myPageSelect.value)">
+              <!-- This select element is used to create a dropdown list -->
+              <!-- The #myPageSelect is a template reference variable that can be used to access the select element in the component -->
+              <!-- The (change) event is triggered when the value of the select element changes -->
+              <!-- The "updatePageSize" method is called with the selected value as an argument when the (change) event occurs -->
+        
+              <option selected="true">5</option>
+              <!-- This option element is selected by default when the page loads -->
+              <!-- It has a value of 5 which represents the page size -->
+              <option>10</option>
+              <option>20</option>
+              <option>50</option>
+            </select>
       </div>
     </div>
   </div>

@@ -16,7 +16,7 @@ export class ProductListComponent implements OnInit {
 
   //new properties for pagination
   thePageNumber: number = 1;
-  thePageSize: number = 10;
+  thePageSize: number = 5; //Change page size to 5 to match the default option set in html
   theTotalElements: number = 0;
 
   constructor(
@@ -28,6 +28,13 @@ export class ProductListComponent implements OnInit {
     this.route.paramMap.subscribe(() => {
       this.listProducts(); // Call the listProducts method
     });
+  }
+
+  updatePageSize(pageSize: string){
+    this.thePageSize = +pageSize; //Assign page size and covert string to number using + 
+    this.thePageNumber = 1; //reset page number to 1 after they change page size
+    this.listProducts(); //call method to refresh page view
+
   }
 
   listProducts() {

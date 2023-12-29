@@ -1,33 +1,30 @@
 <div class="main-content">
   <div class="section-content section-content-p30">
     <div class="container-fluid">
-      <div class="row"></div>
-      
-      <!-- Loop over the collection of products -->
-      <div *ngFor="let tempProduct of products" class="col-md-3">
+      <div class="row">
+        <!-- Loop over the collection of products -->
+        <div *ngFor="let tempProduct of products" class="col-md-3">
           <div class="product-box">
-
             <!-- Add a link on the product image -->
             <a routerLink="/products/{{ tempProduct.id }}">
-              <img src="{{ tempProduct.imageUrl }}" class="img-responsive">
+              <img [src]="tempProduct.imageUrl" class="img-responsive">
             </a>
-            <!-- Add a Link to to Product Name -->
+            <!-- Add a link to the product name -->
             <a routerLink="/products/{{ tempProduct.id }}">
-            <div class = "product-name">{{ tempProduct.name }} </div>
+              <div class="product-name">{{ tempProduct.name }}</div>
             </a>
-            
             <div class="price">{{ tempProduct.unitPrice | currency: 'GBP' }}</div>
             <button (click)="addToCart(tempProduct)" class="btn btn-primary btn-small">Add to cart</button>
           </div>
+        </div>
       </div>
 
-      <!-- If products empty then display a message to the user -->
-      <div *ngIf="products?.length == 0" class="alert alert-warning col-md-12" role="alert">
-      No products found.
-    </div>
+      <!-- If products are empty, display a message to the user -->
+      <div *ngIf="products?.length === 0" class="alert alert-warning col-md-12" role="alert">
+        No products found.
+      </div>
 
-    <!-- Footer Pagination Component -->
-    <div class="col-md-6">
+      <!-- Footer Pagination Component -->
       <div class="row">
         <div class="col-md-9" style="padding-left: 30%">
           <ngb-pagination 
@@ -37,30 +34,27 @@
             [maxSize]="5" 
             [boundaryLinks]="true"
             (pageChange)="listProducts()"
-             class = "fixed-pagination">
+            class="fixed-pagination">
           </ngb-pagination>
         </div>
 
-        <div class = "col-md-3 mt-2" style="position: fixed; bottom:0; left: 0;">
-            <span class="mr-2"> Page Size </span>
-            <select #myPageSelect (change)="updatePageSize(myPageSelect.value)">
-              <!-- This select element is used to create a dropdown list -->
-              <!-- The #myPageSelect is a template reference variable that can be used to access the select element in the component -->
-              <!-- The (change) event is triggered when the value of the select element changes -->
-              <!-- The "updatePageSize" method is called with the selected value as an argument when the (change) event occurs -->
-              <option>2</option>
-              <option selected="true">5</option>
-              <!-- This option element is selected by default when the page loads -->
-              <!-- It has a value of 5 which represents the page size -->
-              
-              <option>10</option>
-              <option>20</option>
-              <option>50</option>
-            </select>
+        <div class="col-md-3 mt-2" style="position: fixed; bottom:0; left: 0;">
+          <span class="mr-2">Page Size</span>
+          <select #myPageSelect (change)="updatePageSize(myPageSelect.value)">
+            <!-- This select element is used to create a dropdown list -->
+            <!-- The #myPageSelect is a template reference variable that can be used to access the select element in the component -->
+            <!-- The (change) event is triggered when the value of the select element changes -->
+            <!-- The "updatePageSize" method is called with the selected value as an argument when the (change) event occurs -->
+            <option>2</option>
+            <option selected="true">5</option>
+            <!-- This option element is selected by default when the page loads -->
+            <!-- It has a value of 5 which represents the page size -->
+            <option>10</option>
+            <option>20</option>
+            <option>50</option>
+          </select>
+        </div>
       </div>
-      <div *ngFor="let tempProduct of products" class="col-md-3">
-        <button (click) = "addToCart(tempProduct)" class="btn btn-primary btn-sm">Add to Cart</button>
-    </div>
     </div>
   </div>
 </div>

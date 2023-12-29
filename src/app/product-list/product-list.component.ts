@@ -30,6 +30,11 @@ export class ProductListComponent implements OnInit {
     });
   }
 
+  addToCart(theProduct: Product){
+    console.log(`Adding to cart: ${theProduct.name}, ${theProduct.unitPrice}`);
+  
+  }
+
   updatePageSize(pageSize: string){
     this.thePageSize = +pageSize; //Assign page size and covert string to number using + 
     this.thePageNumber = 1; //reset page number to 1 after they change page size

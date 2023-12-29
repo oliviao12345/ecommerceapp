@@ -8,7 +8,8 @@ import {Routes, RouterModule} from '@angular/router';
 import { ProductCategoryMenuComponent } from './components/product-category-menu/product-category-menu.component';
 import { SearchComponent } from './components/search/search.component';
 import { ProductDetailsComponent } from './components/product-details/product-details.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap' //<-- Ng bootstrap import
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { CartStatusComponent } from './components/cart-status/cart-status.component';
 
 // Define an array of routes for the application ORDER FROM SPECIFIC TO GENERIC
 const routes: Routes = [
@@ -29,7 +30,7 @@ const routes: Routes = [
 
 @NgModule({
   // Declare the components used in the module
-  declarations: [AppComponent, ProductListComponent, ProductCategoryMenuComponent, SearchComponent, ProductDetailsComponent],
+  declarations: [AppComponent, ProductListComponent, ProductCategoryMenuComponent, SearchComponent, ProductDetailsComponent, CartStatusComponent],
   // Import necessary modules and specify the defined routes
   imports: [
     RouterModule.forRoot(routes),

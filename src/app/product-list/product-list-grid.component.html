@@ -17,7 +17,7 @@
             </a>
             
             <div class="price">{{ tempProduct.unitPrice | currency: 'GBP' }}</div>
-            <a href="#" class="primary button">Add to cart</a>
+            <button (click)="addToCart(tempProduct)" class="btn btn-primary btn-small">Add to cart</button>
           </div>
       </div>
 
@@ -58,6 +58,9 @@
               <option>50</option>
             </select>
       </div>
+      <div *ngFor="let tempProduct of products" class="col-md-3">
+        <button (click) = "addToCart(tempProduct)" class="btn btn-primary btn-sm">Add to Cart</button>
+    </div>
     </div>
   </div>
 </div>

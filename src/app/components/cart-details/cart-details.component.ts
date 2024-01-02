@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { CartService } from 'src/app/service/cart.service';
 import { CartItem } from 'src/app/common/cart-item'; // <- Import Cart Item
+import { NgIfContext } from '@angular/common';
 
 @Component({
   selector: 'app-cart-details',

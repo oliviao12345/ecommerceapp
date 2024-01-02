@@ -2,6 +2,8 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { CartService } from 'src/app/service/cart.service';
 import { CartItem } from 'src/app/common/cart-item'; // <- Import Cart Item
 import { NgIfContext } from '@angular/common';
+import { Product } from '../../common/product';
+import { ProductListComponent } from '../../product-list/product-list.component';
 
 @Component({
   selector: 'app-cart-details',
@@ -17,6 +19,14 @@ export class CartDetailsComponent implements OnInit{
 
   ngOnInit() {
       this.listCartDetails();
+  }
+
+  Remove(theCartItem: CartItem){
+    if (theCartItem.quantity > 0){
+      this.cartService.removeFromCart(theCartItem);
+
+    }
+
   }
 
   decrementQuantity(theCartItem: CartItem){

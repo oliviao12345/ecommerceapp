@@ -10,9 +10,12 @@ import { SearchComponent } from './components/search/search.component';
 import { ProductDetailsComponent } from './components/product-details/product-details.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CartStatusComponent } from './components/cart-status/cart-status.component';
+import { CartDetailsComponent } from './components/cart-details/cart-details.component';
 
 // Define an array of routes for the application ORDER FROM SPECIFIC TO GENERIC
 const routes: Routes = [
+  {path: 'cart-details', component: CartDetailsComponent},
+
   { path: 'products/:id', component: ProductDetailsComponent}, //<<Add for Prod Details
   { path: 'search/:keyword', component: ProductListComponent}, // << ADDED THIS
   // Route for specific category with an ID parameter
@@ -30,7 +33,7 @@ const routes: Routes = [
 
 @NgModule({
   // Declare the components used in the module
-  declarations: [AppComponent, ProductListComponent, ProductCategoryMenuComponent, SearchComponent, ProductDetailsComponent, CartStatusComponent],
+  declarations: [AppComponent, ProductListComponent, ProductCategoryMenuComponent, SearchComponent, ProductDetailsComponent, CartStatusComponent, CartDetailsComponent],
   // Import necessary modules and specify the defined routes
   imports: [
     RouterModule.forRoot(routes),

@@ -19,11 +19,17 @@ export class CartDetailsComponent implements OnInit{
       this.listCartDetails();
   }
 
-  listCartDetails(){
+  decrementQuantity(theCartItem: CartItem){
+    this.cartService.removeFromCart(theCartItem);
+  }
 
+  incrementQuantity(theCartItem: CartItem){
+    this.cartService.addToCart(theCartItem);
+  }
+
+  listCartDetails(){
     // Get the list of items currently in the shopping cart
     this.cartItems = this.cartService.cartItems;
-
     // Keep track of the total price of items in the cart by subscribing 
     // to updates 
     this.cartService.totalPrice.subscribe(

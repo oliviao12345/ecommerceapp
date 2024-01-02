@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Product } from '../../common/product';
 import { ActivatedRoute } from '@angular/router';
 import { ProductService } from 'src/app/service/product.service';
+import { CartItem } from 'src/app/common/cart-item'; // Add Cart Item Import
+import { CartService } from 'src/app/service/cart.service'; // Add Cart SVC Import
 
 @Component({
   selector: 'app-product-details',
@@ -13,12 +15,23 @@ export class ProductDetailsComponent implements OnInit{
   product!: Product;
 
   constructor(private productService: ProductService, 
+    private cartService: CartService, //<<- Inject Cart Service
     private route: ActivatedRoute) {}
 
     ngOnInit(): void {
         this.route.paramMap.subscribe(() => {
           this.handleProductDetails();
         })
+    }
+
+    //Implement Add to Cart Method for Prod Details Page
+    addToCart(){
+      console.log(`Adding to cart: ${this.product.name}, ${this.product.unitPrice}`);
+  
+      const theCartItem = new CartItem(this.product);
+    
+      this.cartService.addToCart(theCartItem); // Call the Cart Service
+
     }
 
     handleProductDetails(){

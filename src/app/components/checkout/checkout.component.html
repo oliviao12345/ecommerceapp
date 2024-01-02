@@ -1,30 +1,156 @@
-<form [formGroup]="checkoutFormGroup">
-  <!-- Customer form group -->
+<div class="main-content">
 
-  <div formGroupName="customer" class="form-area">
-    <h3>Customer</h3>
+    <form [formGroup]="checkoutFormGroup">
+        <div class="text-center">
+        <h1>Checkout Page</h1>
+        </div>
+      <!-- CUSTOMER FORM -->
 
-    <div class="row">
-      <div class="col-md-2">
-        <label>First Name</label>
+      <div formGroupName="customer" class="form-area">
+        <h3>Customer</h3>
+  
+        <div class="row">
+          <div class="col-md-2">
+            <label>First Name</label>
+          </div>
+          <input formControlName="firstName" type="text" />
+        </div>
+        <div class="row">
+          <div class="col-md-2">
+            <label>Last Name</label>
+          </div>
+          <input formControlName="lastName" type="text" />
+        </div>
+        <div class="row">
+          <div class="col-md-2">
+            <label>Email</label>
+          </div>
+          <input formControlName="email" type="text" />
+        </div>
       </div>
-      <input formControlName="firstName" type="text" />
-    </div>
-    <div class="row">
-      <div class="col-md-2">
-        <label>Last Name</label>
+  
+      <!-- SHIPPING ADDRESS FORM -->
+      <div formGroupName="shippingAddress" class="form-area">
+        <h3>Shipping Address</h3>
+        <div class="row">
+          <div class="col-md-2">
+            <label>Country</label>
+          </div>
+          <input formControlName="country" type="text" />
+        </div>
+        <div class="row">
+          <div class="col-md-2">
+            <label>Street</label>
+          </div>
+          <input formControlName="street" type="text" />
+        </div>
+        <div class="row">
+          <div class="col-md-2">
+            <label>City</label>
+          </div>
+          <input formControlName="city" type="text" />
+        </div>
+        <div class="row">
+          <div class="col-md-2">
+            <label>Town</label>
+          </div>
+          <input formControlName="town" type="text" />
+        </div>
+        <div class="row">
+          <div class="col-md-2">
+            <label>Post Code</label>
+          </div>
+          <input formControlName="postCode" type="text" />
+        </div>
       </div>
-      <input formControlName="lastName" type="text" />
-    </div>
-    <div class="row">
-      <div class="col-md-2">
-        <label>Email</label>
+  
+      <!-- BILLING ADDRESS FORM -->
+      <div formGroupName="billingAddress" class="form-area">
+        <h3>Billing Address</h3>
+        <div class="row">
+          <div class="col-md-2">
+            <label>Country</label>
+          </div>
+          <input formControlName="country" type="text" />
+        </div>
+        <div class="row">
+          <div class="col-md-2">
+            <label>Street</label>
+          </div>
+          <input formControlName="street" type="text" />
+        </div>
+        <div class="row">
+          <div class="col-md-2">
+            <label>City</label>
+          </div>
+          <input formControlName="city" type="text" />
+        </div>
+        <div class="row">
+          <div class="col-md-2">
+            <label>Town</label>
+          </div>
+          <input formControlName="town" type="text" />
+        </div>
+        <div class="row">
+          <div class="col-md-2">
+            <label>Post Code</label>
+          </div>
+          <input formControlName="postCode" type="text" />
+        </div>
       </div>
-      <input formControlName="email" type="text" />
-    </div>
+  
+      <!-- CREDIT CARD FORM -->
+      <div formGroupName="creditCard" class="form-area">
+        <h3>Credit Card</h3>
+        <div class="row">
+          <div class="col-md-2">
+            <label>Card Type</label>
+          </div>
+          <input formControlName="cardType" type="text" />
+        </div>
+        <div class="row">
+          <div class="col-md-2">
+            <label>Name on Card</label>
+          </div>
+          <input formControlName="nameOnCard" type="text" />
+        </div>
+        <div class="row">
+          <div class="col-md-2">
+            <label>Card Number</label>
+          </div>
+          <input formControlName="cardNumber" type="text" />
+        </div>
+        <div class="row">
+          <div class="col-md-2">
+            <label>Town</label>
+          </div>
+          <input formControlName="town" type="text" />
+        </div>
+        <div class="row">
+          <div class="col-md-2">
+            <label>Security Code</label>
+          </div>
+          <input formControlName="securityCode" type="text" />
+        </div>
+        <div class="row">
+          <div class="col-md-2">
+            <label>Expiry Month</label>
+          </div>
+          <input formControlName="expMonth" type="text" />
+        </div>
+        <div class="row">
+          <div class="col-md-2"> <!-- Create a column with a width of 2 columns -->
+            <label>Expiry Year</label>
+          </div>
+          <input formControlName="expYear" type="text" />
+        </div>
+        <div class="text-center">
+            <div class="col mt-4">  <!-- Added margin-top for spacing -->
+
+          <button type="submit" class="btn btn-info">Purchase</button>
+        </div>
+        </div>
+      </div>
+    </form>
   </div>
-
-  <div class="text-center">
-    <button type="submit" class="btn btn-info">Purchase</button>
-  </div>
-</form>
+  

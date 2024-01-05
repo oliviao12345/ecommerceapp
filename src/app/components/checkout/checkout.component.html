@@ -1,14 +1,12 @@
 <div class="main-content">
-
-    <form [formGroup]="checkoutFormGroup">
-        <div class="text-center">
+    <form [formGroup]="checkoutFormGroup" (ngSubmit)="onSubmit()">
+      <div class="text-center">
         <h1>Checkout Page</h1>
-        </div>
+      </div>
+  
       <!-- CUSTOMER FORM -->
-
       <div formGroupName="customer" class="form-area">
         <h3>Customer</h3>
-  
         <div class="row">
           <div class="col-md-2">
             <label>First Name</label>
@@ -63,6 +61,13 @@
           <input formControlName="postCode" type="text" />
         </div>
       </div>
+      <!-- Checkbox to copy shipping to billing -->
+      <div class="input-space">
+        <label class="au-checkbox">
+            <input type="checkbox" (change)="copyShippingAddressToBillingAddress($event)">
+            <span class="au-checkmark"></span>Billing Address Same As Shipping Address
+        </label>
+      </div>
   
       <!-- BILLING ADDRESS FORM -->
       <div formGroupName="billingAddress" class="form-area">
@@ -102,11 +107,20 @@
       <!-- CREDIT CARD FORM -->
       <div formGroupName="creditCard" class="form-area">
         <h3>Credit Card</h3>
+  
         <div class="row">
           <div class="col-md-2">
             <label>Card Type</label>
           </div>
-          <input formControlName="cardType" type="text" />
+          <!-- Dropdown for Card Type -->
+          <select formControlName="cardType">
+            <option value="visa">Visa</option>
+            <option value="mastercard">Mastercard</option>
+            <option value="amex">American Express</option>
+            <option value="discover">Discover</option>
+            <option value="other">Other</option>
+          </select>
+          <!-- End of Dropdown for Card Type -->
         </div>
         <div class="row">
           <div class="col-md-2">
@@ -122,9 +136,27 @@
         </div>
         <div class="row">
           <div class="col-md-2">
-            <label>Town</label>
+            <label>Expiration Month</label>
           </div>
-          <input formControlName="town" type="text" />
+          <!-- Populate drop down list with checkout.ts Component "creditCardMonths" -->
+          <select formControlName="expMonth">
+            <option *ngFor="let month of creditCardMonths">
+            {{ month }}
+            </option>
+          </select>
+        </div>
+        <div class="row">
+          <div class="col-md-2">
+            <!-- Create a column with a width of 2 columns -->
+            <label>Expiration Year</label>
+          </div>
+
+        <!-- Populate drop down list with checkout.ts Component "creditCardYears" -->
+          <select formControlName="expYear">
+           <option *ngFor="let year of creditCardYears">
+            {{ year }}
+        </option>
+          </select>
         </div>
         <div class="row">
           <div class="col-md-2">
@@ -132,23 +164,22 @@
           </div>
           <input formControlName="securityCode" type="text" />
         </div>
-        <div class="row">
-          <div class="col-md-2">
-            <label>Expiry Month</label>
-          </div>
-          <input formControlName="expMonth" type="text" />
+      </div>
+  
+      <!-- ORDER DETAILS -->
+      <div class="form-area">
+        <div class="col mt-4">
+          <h3>Review Your Order</h3>
+          <p>Total Quantity: {{ totalQuantity }}</p>
+          <p>Shipping: FREE</p>
+          <p>Total Price: {{ totalPrice | currency: 'GBP'}}</p>
         </div>
-        <div class="row">
-          <div class="col-md-2"> <!-- Create a column with a width of 2 columns -->
-            <label>Expiry Year</label>
-          </div>
-          <input formControlName="expYear" type="text" />
-        </div>
-        <div class="text-center">
-            <div class="col mt-4">  <!-- Added margin-top for spacing -->
-
+      </div>
+  
+      <!-- SUBMIT BUTTON -->
+      <div class="text-center">
+        <div class="col mt-4">
           <button type="submit" class="btn btn-info">Purchase</button>
-        </div>
         </div>
       </div>
     </form>

@@ -84,7 +84,7 @@
           <div class="col-md-2">
             <label>Country</label>
           </div>
-          <select formControlName="country" (change)="getTowns('shippingAddress')">
+          <select formControlName="country" (change)="getTowns('billingAddress')">
             <option *ngFor="let country of countries" [ngValue]="country">
                 {{ country.name }}
               </option>
@@ -106,7 +106,11 @@
           <div class="col-md-2">
             <label>Town</label>
           </div>
-          <input formControlName="town" type="text" />
+          <select formControlName="town">
+            <option *ngFor="let town of billingAddressTowns" [ngValue]="town">
+            {{ town.name }}
+            </option>
+          </select>
         </div>
         <div class="row">
           <div class="col-md-2">

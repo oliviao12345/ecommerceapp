@@ -28,6 +28,7 @@ export class FormService {
   getCountries(): Observable<Country[]> {
     return this.httpClient.get<GetResponseCountries>(this.countriesUrl).pipe(
       map(response => response._embedded.countries)
+      
     );
   }
 

@@ -154,7 +154,7 @@ export class CheckoutComponent implements OnInit {
         }
   
         // Select the first item by default
-        formGroup?.get('state')?.setValue(data[0]); // Set the value of 'state' control in the form group to the first town in the received data
+        formGroup?.get('state')?.setValue(data[0]); // Set the value of 'town' control in the form group to the first town in the received data
       }
     );
   }

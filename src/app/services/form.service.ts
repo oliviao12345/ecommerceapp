@@ -1,46 +1,71 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { of } from 'rxjs'; //rxjs = reactive js framework
+import { map } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { Country } from '../components/country';
+import { Town } from '../components/town';
 
 @Injectable({
   providedIn: 'root'
 })
-// Define a class named FormService
 export class FormService {
+  private countriesUrl = 'http://localhost:1235/api/countries';
+  private townsUrl = 'http://localhost:1235/api/towns/';
+
+  constructor(private httpClient: HttpClient) { }
+
+  getTowns(theCountryCode: string): Observable<Town[]>{
+    //search url
+    const searchTownsUrl = `${this.townsUrl}search/findByCountryCode?code=${theCountryCode}`;
+
+    return this.httpClient.get<GetResponseTowns>(searchTownsUrl).pipe(
+      map(response => response._embedded.towns)
+    );
+  }
+
+  // Map the JSON data from Spring Data REST to Country Array
+  getCountries(): Observable<Country[]> {
+    return this.httpClient.get<GetResponseCountries>(this.countriesUrl).pipe(
+      map(response => response._embedded.countries)
+    );
+  }
+
   
-  // Constructor function
-  constructor() { }
-  
-  // Function to get an array of credit card months
-  // Takes a startMonth as input and returns an Observable<number[]>
+
   getCreditCardMonths(startMonth: number): Observable<number[]> {
     let data: number[] = [];
-    
-    // Loop from startMonth to 12 and push each month to the data array
-    for (let theMonth = startMonth; theMonth <= 12; theMonth++){
+
+    for (let theMonth = startMonth; theMonth <= 12; theMonth++) {
       data.push(theMonth);
     }
-    
-    return of(data); // The of operator will wrap the array as an Observable
+
+    return of(data);
   }
-  
-  // Function to get an array of credit card years
-  // Returns an Observable<number[]>
-  getCreditCardYears(): Observable<number[]>{
+
+  getCreditCardYears(): Observable<number[]> {
     let data: number[] = [];
-    
-    // Get the current year
     const startYear: number = new Date().getFullYear();
-    
-    // Calculate the end year as 10 years from the current year
     const endYear: number = startYear + 10;
-    
-    // Loop from startYear to endYear and push each year to the data array
-    for(let theYear = startYear; theYear <= endYear; theYear++){
+
+    for (let theYear = startYear; theYear <= endYear; theYear++) {
       data.push(theYear);
     }
-    
-    return of(data); // The of operator will wrap the array as an Observable
+
+    return of(data);
   }
 }
 
+//Unwrap the JSON from Spring Data Rest embedded entry
+interface GetResponseTowns{
+  _embedded: {
+    towns: Town[];
+  }
+}
+
+//Unwrap the JSON from Spring Data Rest embedded entry
+interface GetResponseCountries {
+  _embedded: {
+    countries: Country[];
+  }
+}

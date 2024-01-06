@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
-import { CartService } from 'src/app/service/cart.service';
+import { CartService } from 'src/app/services/cart.service';
 import { CartItem } from 'src/app/common/cart-item'; // <- Import Cart Item
 import { NgIfContext } from '@angular/common';
 import { Product } from '../../common/product';
@@ -8,52 +8,48 @@ import { ProductListComponent } from '../../product-list/product-list.component'
 @Component({
   selector: 'app-cart-details',
   templateUrl: './cart-details.component.html',
-  styleUrls: ['./cart-details.component.css']
+  styleUrls: ['./cart-details.component.css'],
 })
-export class CartDetailsComponent implements OnInit{
+export class CartDetailsComponent implements OnInit {
   cartItems: CartItem[] = [];
   totalPrice: number = 0;
   totalQuantity: number = 0;
 
-  constructor(private cartService: CartService) { } // <- Inject Cart Service
+  constructor(private cartService: CartService) {} // <- Inject Cart Service
 
   ngOnInit() {
-      this.listCartDetails();
+    this.listCartDetails();
   }
 
-  Remove(theCartItem: CartItem){
-    if (theCartItem.quantity > 0){
+  Remove(theCartItem: CartItem) {
+    if (theCartItem.quantity > 0) {
       this.cartService.removeFromCart(theCartItem);
-
     }
-
   }
 
-  decrementQuantity(theCartItem: CartItem){
+  decrementQuantity(theCartItem: CartItem) {
     this.cartService.removeFromCart(theCartItem);
   }
 
-  incrementQuantity(theCartItem: CartItem){
+  incrementQuantity(theCartItem: CartItem) {
     this.cartService.addToCart(theCartItem);
   }
 
-  listCartDetails(){
+  listCartDetails() {
     // Get the list of items currently in the shopping cart
     this.cartItems = this.cartService.cartItems;
-    // Keep track of the total price of items in the cart by subscribing 
-    // to updates 
-    this.cartService.totalPrice.subscribe(
-      data => this.totalPrice = data
-    );
+    // Keep track of the total price of items in the cart by subscribing
+    // to updates
+    this.cartService.totalPrice.subscribe((data) => (this.totalPrice = data));
 
-    // Keep track of the total quantity 
-    // of items in the cart by subscribing to updates 
+    // Keep track of the total quantity
+    // of items in the cart by subscribing to updates
     this.cartService.totalQuantity.subscribe(
-      data => this.totalQuantity = data
+      (data) => (this.totalQuantity = data)
     );
 
-    // Calculate the total price and total quantity 
-    // of items in the cart 
+    // Calculate the total price and total quantity
+    // of items in the cart
     this.cartService.computeCartTotals();
   }
 }

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { FormService } from '../../services/form.service';
+import { Country } from '../country';
+import { Town } from '../town';
 
 @Component({
   selector: 'app-checkout',
@@ -9,15 +11,19 @@ import { FormService } from '../../services/form.service';
 })
 export class CheckoutComponent implements OnInit {
   checkoutFormGroup!: FormGroup; // Declare form group
-  totalPrice: number = 0;
-  totalQuantity: number = 0;
-  creditCardYears: number[] = [];
-  creditCardMonths: number[] = [];
+  totalPrice: number = 0; // Initialize total price variable
+  totalQuantity: number = 0; // Initialize total quantity variable
+  creditCardYears: number[] = []; // Initialize an array to store credit card years
+  creditCardMonths: number[] = []; // Initialize an array to store credit card months
+  countries: Country[] = []; // Initialize an array to store countries
+  shippingAddressTowns: Town[] = []; // Initialize an array to store shipping address towns
+  billingAddressTowns: Town[] = []; // Initialize an array to store billing address towns
+  
 
   constructor(
     private formBuilder: FormBuilder,
     private formService: FormService
-  ) {} // Inject the form builder
+  ) {} // Inject the form builder and service
 
   ngOnInit(): void {
     this.checkoutFormGroup = this.formBuilder.group({
@@ -47,8 +53,18 @@ export class CheckoutComponent implements OnInit {
         securityCode: [''],
         expMonth: [''],
         expYear: ['']
-      }),
+      })
     });
+
+    //Populate the countries
+    this.formService.getCountries().subscribe(
+      data => {
+        console.log("Retrieved countries: " + JSON.stringify(data));
+        this.countries = data;
+      }
+    )
+
+
 
     // Get the current month and assign it to the variable startMonth
     const startMonth: number = new Date().getMonth() + 1;
@@ -75,8 +91,30 @@ export class CheckoutComponent implements OnInit {
     });
   }
 
-  copyShippingAddressToBillingAddress(event: any) {
+  handleMonthsAndYears(){
+    const creditCardFormGroup = this.checkoutFormGroup.get('creditCard');
+    const currentYear: number = new Date().getFullYear();
+    const selectedYear: number = Number(creditCardFormGroup?.value.expYear)
+  
+    //if the current year equals the selected year, then start with current month
+    
+    let startMonth: number;
 
+    if(currentYear === selectedYear){
+      startMonth = new Date().getMonth() + 1;
+    }
+    else{
+      startMonth = 1;
+    }
+    this.formService.getCreditCardMonths(startMonth).subscribe(
+      data => {
+        console.log("Retrieved credit card months: " + JSON.stringify(data));
+        this.creditCardMonths = data;
+      }
+    )
+  }
+
+  copyShippingAddressToBillingAddress(event: any) {
     if (event.target.checked) {
       this.checkoutFormGroup.controls["billingAddress"]
             .setValue(this.checkoutFormGroup.controls["shippingAddress"].value);
@@ -84,7 +122,6 @@ export class CheckoutComponent implements OnInit {
     else {
       this.checkoutFormGroup.controls["billingAddress"].reset();
     }
-    
   }
 
   onSubmit() {
@@ -95,4 +132,33 @@ export class CheckoutComponent implements OnInit {
         this.checkoutFormGroup.get('customer')?.value.email
     ); // Access only the email address from the form
   }
+
+  getTowns(formGroupName: string) { // Function to get towns based on the selected country in a form group
+
+    const formGroup = this.checkoutFormGroup.get(formGroupName); // Get the form group based on the provided form group name
+  
+    const countryCode = formGroup?.value.country.code; // Get the selected country code from the form group
+    const countryName = formGroup?.value.country.name; // Get the selected country name from the form group
+  
+    console.log(`${formGroupName} country code: ${countryCode}`); // Log the form group name and selected country code
+    console.log(`${formGroupName} country name: ${countryName}`); // Log the form group name and selected country name
+  
+    this.formService.getTowns(countryCode).subscribe( // Call the form service to get towns based on the country code
+      data => {
+  
+        if (formGroupName === 'shippingAddress') { // Check if the form group name is 'shippingAddress'
+          this.shippingAddressTowns = data; // Assign the received towns to the shippingAddressTowns array
+        }
+        else {
+          this.billingAddressTowns = data; // Assign the received towns to the billingAddressTowns array
+        }
+  
+        // Select the first item by default
+        formGroup?.get('state')?.setValue(data[0]); // Set the value of 'state' control in the form group to the first town in the received data
+      }
+    );
+  }
+  
 }
+
+

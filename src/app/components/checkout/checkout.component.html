@@ -34,10 +34,14 @@
           <div class="col-md-2">
             <label>Country</label>
           </div>
-          <input formControlName="country" type="text" />
-        </div>
-        <div class="row">
-          <div class="col-md-2">
+          <select formControlName="country" (change)="getTowns('shippingAddress')">
+          <option *ngFor="let country of countries" [ngValue]="country">
+            {{ country.name }}
+          </option>
+        </select>
+      </div>
+      <div class="row">
+        <div class="col-md-2">
             <label>Street</label>
           </div>
           <input formControlName="street" type="text" />
@@ -52,7 +56,11 @@
           <div class="col-md-2">
             <label>Town</label>
           </div>
-          <input formControlName="town" type="text" />
+          <select formControlName="town">
+            <option *ngFor="let town of shippingAddressTowns" [ngValue]="town">
+            {{ town.name }}
+            </option>
+          </select>
         </div>
         <div class="row">
           <div class="col-md-2">
@@ -76,7 +84,11 @@
           <div class="col-md-2">
             <label>Country</label>
           </div>
-          <input formControlName="country" type="text" />
+          <select formControlName="country" (change)="getTowns('shippingAddress')">
+            <option *ngFor="let country of countries" [ngValue]="country">
+                {{ country.name }}
+              </option>
+            </select>
         </div>
         <div class="row">
           <div class="col-md-2">
@@ -150,9 +162,8 @@
             <!-- Create a column with a width of 2 columns -->
             <label>Expiration Year</label>
           </div>
-
         <!-- Populate drop down list with checkout.ts Component "creditCardYears" -->
-          <select formControlName="expYear">
+          <select formControlName="expYear" (change)="handleMonthsAndYears()">
            <option *ngFor="let year of creditCardYears">
             {{ year }}
         </option>
@@ -184,4 +195,3 @@
       </div>
     </form>
   </div>
-  

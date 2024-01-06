@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ProductService } from '../service/product.service';
+import { ProductService } from '../services/product.service';
 import { Product } from '../common/product';
 import { ActivatedRoute } from '@angular/router';
 import { CartItem } from '../common/cart-item';
-import { CartService } from '../service/cart.service';
+import { CartService } from '../services/cart.service';
 
 @Component({
   selector: 'app-product-list',
@@ -33,20 +33,18 @@ export class ProductListComponent implements OnInit {
     });
   }
 
-
-  addToCart(theProduct: Product){
+  addToCart(theProduct: Product) {
     console.log(`Adding to cart: ${theProduct.name}, ${theProduct.unitPrice}`);
-  
+
     const theCartItem = new CartItem(theProduct);
-  
+
     this.cartService.addToCart(theCartItem); // Call the Cart Service
   }
 
-  updatePageSize(pageSize: string){
-    this.thePageSize = +pageSize; //Assign page size and covert string to number using + 
+  updatePageSize(pageSize: string) {
+    this.thePageSize = +pageSize; //Assign page size and covert string to number using +
     this.thePageNumber = 1; //reset page number to 1 after they change page size
     this.listProducts(); //call method to refresh page view
-
   }
 
   listProducts() {
@@ -66,48 +64,59 @@ export class ProductListComponent implements OnInit {
       this.products = data;
 
       //Pagination code to handle search products
-      this.productService.searchProductsPaginate(this.thePageNumber -1,
-        this.thePageSize, this.keyword).subscribe(this.processResult());
+      this.productService
+        .searchProductsPaginate(
+          this.thePageNumber - 1,
+          this.thePageSize,
+          this.keyword
+        )
+        .subscribe(this.processResult());
     });
   }
 
   //Helper method
-  private processResult(){
-    return (data: any) =>{
+  private processResult() {
+    return (data: any) => {
       this.products = data._embedded.products;
       this.thePageNumber = data.page.number + 1;
       this.thePageSize = data.page.size;
       this.theTotalElements = data.page.totalElements;
-
-    }
+    };
   }
 
   handleListProducts() {
     // Check if the route has a category id parameter
     const categoryIdParam = this.route.snapshot.paramMap.get('id');
-    
+
     // Update the currentCategoryId only if the categoryIdParam is not null
     if (categoryIdParam) {
       this.currentCategoryId = +categoryIdParam;
     } else {
       this.currentCategoryId = 1; // Set default category id to 1
     }
-    
-    this.productService.getProductList(this.currentCategoryId).subscribe((data) => {
-      this.products = data;
-    
-      //Added code for pagination func
-      this.productService.getProductListPaginate(this.thePageNumber -1,
-        this.thePageSize, this.currentCategoryId). subscribe(
-          //Process the results that comes from the backend
-          //everything on RHS is data from spring data rest json
-          data => {
-            this.products = data._embedded.products;
-            this.thePageNumber = data.page.number + 1;
-            this.thePageSize = data.page.size;
-            this.theTotalElements = data.page.totalElements;
-          }
-        )
-    });
+
+    this.productService
+      .getProductList(this.currentCategoryId)
+      .subscribe((data) => {
+        this.products = data;
+
+        //Added code for pagination func
+        this.productService
+          .getProductListPaginate(
+            this.thePageNumber - 1,
+            this.thePageSize,
+            this.currentCategoryId
+          )
+          .subscribe(
+            //Process the results that comes from the backend
+            //everything on RHS is data from spring data rest json
+            (data) => {
+              this.products = data._embedded.products;
+              this.thePageNumber = data.page.number + 1;
+              this.thePageSize = data.page.size;
+              this.theTotalElements = data.page.totalElements;
+            }
+          );
+      });
   }
 }

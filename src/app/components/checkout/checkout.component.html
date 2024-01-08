@@ -245,12 +245,29 @@
             <label>Name on Card</label>
           </div>
           <input formControlName="nameOnCard" type="text" />
+          <div *ngIf="ccNameOnCard?.invalid && (ccNameOnCard?.dirty || ccNameOnCard?.touched)" class="alert alert-danger">
+            <div *ngIf="ccNameOnCard?.errors?.['required'] || ccNameOnCard?.errors?.['notOnlyWhitespace']">
+              Name on card is required
+            </div>
+            <div *ngIf="ccNameOnCard?.errors?.['minLength']">
+               Name on card must be at least 2 characters long
+            </div>
+          </div>
+
         </div>
         <div class="row">
           <div class="col-md-2">
             <label>Card Number</label>
           </div>
           <input formControlName="cardNumber" type="text" />
+          <div *ngIf="ccCardNumber?.invalid && (ccCardNumber?.dirty || ccCardNumber?.touched)" class="alert alert-danger">
+            <div *ngIf="ccCardNumber?.errors?.['required'] || ccCardNumber?.errors?.['notOnlyWhitespace']">
+              Card Number is required
+            </div>
+            <div *ngIf="ccNameOnCard?.errors?.['minLength']">
+               Card Number must be at least 16 Digits long
+            </div>
+          </div>
         </div>
         <div class="row">
           <div class="col-md-2">
@@ -262,6 +279,11 @@
             {{ month }}
             </option>
           </select>
+          <div *ngIf="ccExpMonth?.invalid && (ccExpMonth?.dirty || ccExpMonth?.touched)" class="alert alert-danger">
+            <div *ngIf="ccExpMonth?.errors?.['required'] || ccExpMonth?.errors?.['notOnlyWhitespace']">
+            Expiration Month is Required
+            </div>
+        </div>
         </div>
         <div class="row">
           <div class="col-md-2">
@@ -274,12 +296,25 @@
             {{ year }}
         </option>
           </select>
+          <div *ngIf="ccExpYear?.invalid && (ccExpYear?.dirty || ccExpYear?.touched)" class="alert alert-danger">
+            <div *ngIf="ccExpYear?.errors?.['required'] || ccExpYear?.errors?.['notOnlyWhitespace']">
+            Expiration year is Required
+            </div>
+        </div>
         </div>
         <div class="row">
           <div class="col-md-2">
             <label>Security Code</label>
           </div>
           <input formControlName="securityCode" type="text" />
+          <div *ngIf="ccSecCode?.invalid && (ccSecCode?.dirty || ccSecCode?.touched)" class="alert alert-danger">
+            <div *ngIf="ccSecCode?.errors?.['required'] || ccSecCode?.errors?.['notOnlyWhitespace']">
+              Security Code is required
+            </div>
+            <div *ngIf="ccNameOnCard?.errors?.['minLength']">
+               Security Code must be at least 3 Digits long
+            </div>
+          </div>
         </div>
       </div>
   

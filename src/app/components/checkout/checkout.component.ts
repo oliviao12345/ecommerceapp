@@ -84,7 +84,7 @@ export class CheckoutComponent implements OnInit {
         city: new FormControl('', [
           Validators.required,
           Validators.minLength(2),
-          CustomValidators.notOnlyWhitespace,
+          CustomValidators.notOnlyWhitespace
         ]),
         town: new FormControl('', [
           Validators.required
@@ -92,16 +92,36 @@ export class CheckoutComponent implements OnInit {
         postCode: new FormControl('', [
           Validators.required,
           Validators.minLength(2),
-          CustomValidators.notOnlyWhitespace,
+          CustomValidators.notOnlyWhitespace
         ])
       }),
       creditCard: this.formBuilder.group({
-        cardType: [''],
-        nameOnCard: [''],
-        cardNumber: [''],
-        securityCode: [''],
-        expMonth: [''],
-        expYear: [''],
+        cardType: new FormControl
+        ('', [Validators.required]),
+        nameOnCard: new FormControl
+        ('', [
+          Validators.required,
+          Validators.minLength(2),
+          CustomValidators.notOnlyWhitespace
+        ]),
+        cardNumber: new FormControl
+        ('', [
+          Validators.required,
+          Validators.pattern('[0-9]{16}') // 16 Digits Max between 0 -9
+        ]),
+        securityCode: new FormControl
+        ('', [
+          Validators.required,
+          Validators.pattern('[0-9]{3}') // 3 Digits Max between 0-9
+        ]),
+        expMonth: new FormControl
+        ('', [
+          Validators.required
+        ]),
+        expYear: new FormControl
+        ('', [
+          Validators.required
+        ]),
       }),
     });
 
@@ -134,6 +154,25 @@ export class CheckoutComponent implements OnInit {
       // Assign the retrieved credit card years to the creditCardYears property
       this.creditCardYears = data;
     });
+  }
+
+  get ccCardType(){
+    return this.checkoutFormGroup.get('creditCard.cardType')
+  }
+  get ccNameOnCard(){
+    return this.checkoutFormGroup.get('creditCard.nameOnCard')
+  }
+  get ccSecCode(){
+    return this.checkoutFormGroup.get('creditCard.securityCode')
+  }
+  get ccCardNumber(){
+    return this.checkoutFormGroup.get('creditCard.cardNumber')
+  }
+  get ccExpMonth(){
+    return this.checkoutFormGroup.get('creditCard.expirationMontn')
+  }
+  get ccExpYear(){
+    return this.checkoutFormGroup.get('creditCard.expirationYear')
   }
 
   get firstName() {

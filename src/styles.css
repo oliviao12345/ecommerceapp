@@ -1054,4 +1054,13 @@ footer ul li{
         border:0;
         padding:8px 0
     }
+
+    /* ERROR MESSAGE FORM BOX */
+    .alert.alert-danger {
+        display: block;
+        color: red;
+        margin-top: 5px;
+      }
+      
+
 }

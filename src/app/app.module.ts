@@ -17,7 +17,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 // Define an array of routes for the application ORDER FROM SPECIFIC TO GENERIC
 const routes: Routes = [
   { path: 'checkout', component: CheckoutComponent}, //<<Added This
-
   { path: 'cart-details', component: CartDetailsComponent},
   { path: 'products/:id', component: ProductDetailsComponent}, //<<Add for Prod Details
   { path: 'search/:keyword', component: ProductListComponent}, // << ADDED THIS

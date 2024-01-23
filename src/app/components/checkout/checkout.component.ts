@@ -9,6 +9,12 @@ import { FormService } from '../../services/form.service';
 import { Country } from '../country';
 import { Town } from '../town';
 import { CustomValidators } from '../../validators/customvalidators';
+import { CartService } from '../../services/cart.service';
+import { CheckoutService } from 'src/app/services/checkout.service';
+import { Router } from '@angular/router'; // Correct import statement
+import { OrderItem } from 'src/app/common/order-item';
+import { Order } from 'src/app/common/order';
+import { Purchase } from 'src/app/common/purchase';
 
 @Component({
   selector: 'app-checkout',
@@ -27,10 +33,14 @@ export class CheckoutComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private formService: FormService
-  ) {} // Inject the form builder and service
-
+    private formService: FormService,
+    private cartService: CartService,
+    private checkoutService: CheckoutService,
+    private router: Router
+  ) {} // Inject the form builder, form service, and cart service
   ngOnInit(): void {
+    this.reviewCartDetails();
+
     this.checkoutFormGroup = this.formBuilder.group({
       customer: this.formBuilder.group({
         firstName: new FormControl('', [
@@ -50,9 +60,7 @@ export class CheckoutComponent implements OnInit {
         ]),
       }),
       shippingAddress: this.formBuilder.group({
-        country: new FormControl('', [
-          Validators.required
-        ]),
+        country: new FormControl('', [Validators.required]),
         street: new FormControl('', [
           Validators.required,
           Validators.minLength(2),
@@ -63,19 +71,15 @@ export class CheckoutComponent implements OnInit {
           Validators.minLength(2),
           CustomValidators.notOnlyWhitespace,
         ]),
-        town: new FormControl('', [
-          Validators.required
-        ]),
+        town: new FormControl('', [Validators.required]),
         postCode: new FormControl('', [
           Validators.required,
           Validators.minLength(2),
           CustomValidators.notOnlyWhitespace,
-        ])
+        ]),
       }),
       billingAddress: this.formBuilder.group({
-        country: new FormControl('', [
-          Validators.required
-        ]),
+        country: new FormControl('', [Validators.required]),
         street: new FormControl('', [
           Validators.required,
           Validators.minLength(2),
@@ -84,44 +88,32 @@ export class CheckoutComponent implements OnInit {
         city: new FormControl('', [
           Validators.required,
           Validators.minLength(2),
-          CustomValidators.notOnlyWhitespace
+          CustomValidators.notOnlyWhitespace,
         ]),
-        town: new FormControl('', [
-          Validators.required
-        ]),
+        town: new FormControl('', [Validators.required]),
         postCode: new FormControl('', [
           Validators.required,
           Validators.minLength(2),
-          CustomValidators.notOnlyWhitespace
-        ])
+          CustomValidators.notOnlyWhitespace,
+        ]),
       }),
       creditCard: this.formBuilder.group({
-        cardType: new FormControl
-        ('', [Validators.required]),
-        nameOnCard: new FormControl
-        ('', [
+        cardType: new FormControl('', [Validators.required]),
+        nameOnCard: new FormControl('', [
           Validators.required,
           Validators.minLength(2),
-          CustomValidators.notOnlyWhitespace
+          CustomValidators.notOnlyWhitespace,
         ]),
-        cardNumber: new FormControl
-        ('', [
+        cardNumber: new FormControl('', [
           Validators.required,
-          Validators.pattern('[0-9]{16}') // 16 Digits Max between 0 -9
+          Validators.pattern('[0-9]{16}'), // 16 Digits Max between 0 -9
         ]),
-        securityCode: new FormControl
-        ('', [
+        securityCode: new FormControl('', [
           Validators.required,
-          Validators.pattern('[0-9]{3}') // 3 Digits Max between 0-9
+          Validators.pattern('[0-9]{3}'), // 3 Digits Max between 0-9
         ]),
-        expMonth: new FormControl
-        ('', [
-          Validators.required
-        ]),
-        expYear: new FormControl
-        ('', [
-          Validators.required
-        ]),
+        expMonth: new FormControl('', [Validators.required]),
+        expYear: new FormControl('', [Validators.required]),
       }),
     });
 
@@ -155,24 +147,35 @@ export class CheckoutComponent implements OnInit {
       this.creditCardYears = data;
     });
   }
+  reviewCartDetails() {
+    //subscribe to cartService.totalQuantity
+    this.cartService.totalQuantity.subscribe(
+      (totalQuantity) => (this.totalQuantity = totalQuantity)
+    );
 
-  get ccCardType(){
-    return this.checkoutFormGroup.get('creditCard.cardType')
+    //subscribe to cartService.totalPrice
+    this.cartService.totalPrice.subscribe(
+      (totalPrice) => (this.totalPrice = totalPrice)
+    );
   }
-  get ccNameOnCard(){
-    return this.checkoutFormGroup.get('creditCard.nameOnCard')
+
+  get ccCardType() {
+    return this.checkoutFormGroup.get('creditCard.cardType');
   }
-  get ccSecCode(){
-    return this.checkoutFormGroup.get('creditCard.securityCode')
+  get ccNameOnCard() {
+    return this.checkoutFormGroup.get('creditCard.nameOnCard');
   }
-  get ccCardNumber(){
-    return this.checkoutFormGroup.get('creditCard.cardNumber')
+  get ccSecCode() {
+    return this.checkoutFormGroup.get('creditCard.securityCode');
   }
-  get ccExpMonth(){
-    return this.checkoutFormGroup.get('creditCard.expirationMontn')
+  get ccCardNumber() {
+    return this.checkoutFormGroup.get('creditCard.cardNumber');
   }
-  get ccExpYear(){
-    return this.checkoutFormGroup.get('creditCard.expirationYear')
+  get ccExpMonth() {
+    return this.checkoutFormGroup.get('creditCard.expirationMontn');
+  }
+  get ccExpYear() {
+    return this.checkoutFormGroup.get('creditCard.expirationYear');
   }
 
   get firstName() {
@@ -187,51 +190,38 @@ export class CheckoutComponent implements OnInit {
     return this.checkoutFormGroup.get('customer.email');
   }
 
-  get shippingAddressCountry(){
+  get shippingAddressCountry() {
     return this.checkoutFormGroup.get('shippingAddress.country');
   }
 
-  get shippingAddressStreet(){
+  get shippingAddressStreet() {
     return this.checkoutFormGroup.get('shippingAddress.street');
-
   }
-  get shippingAddressCity(){
+  get shippingAddressCity() {
     return this.checkoutFormGroup.get('shippingAddress.city');
-
   }
-  get shippingAddressTown(){
+  get shippingAddressTown() {
     return this.checkoutFormGroup.get('shippingAddress.town');
-
   }
-  get shippingAddressPostcode(){
+  get shippingAddressPostcode() {
     return this.checkoutFormGroup.get('shippingAddress.postCode');
-
   }
-  
-  get billingAddressCountry(){
+
+  get billingAddressCountry() {
     return this.checkoutFormGroup.get('billingAddress.country');
-
   }
-  get billingAddressTown(){
+  get billingAddressTown() {
     return this.checkoutFormGroup.get('billingAddress.town');
-
   }
-  get billingAddressCity(){
+  get billingAddressCity() {
     return this.checkoutFormGroup.get('billingAddress.city');
-
   }
-  get billingAddressStreet(){
+  get billingAddressStreet() {
     return this.checkoutFormGroup.get('billingAddress.street');
-
   }
-  get billingAddressPostcode(){
+  get billingAddressPostcode() {
     return this.checkoutFormGroup.get('billingAddress.postCode');
-
   }
-
-
-
-
 
   handleMonthsAndYears() {
     const creditCardFormGroup = this.checkoutFormGroup.get('creditCard');
@@ -267,16 +257,74 @@ export class CheckoutComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log('Handling the submit button');
+    console.log("Handling the submit button");
 
-    if (this.checkoutFormGroup.invalid) {
-      this.checkoutFormGroup.markAllAsTouched();
-    } // By touching all fields, triggers the display of the error messages
-    console.log(this.checkoutFormGroup.get('customer')?.value); // Access the entire form group values
-    console.log(
-      'The email address is: ' +
-        this.checkoutFormGroup.get('customer')?.value.email
-    ); // Access only the email address from the form
+    // set up order
+    let order = new Order(this.totalPrice, this.totalQuantity);
+    order.totalPrice = this.totalPrice;
+    order.totalQuantity = this.totalQuantity;
+
+    // get cart items
+    const cartItems = this.cartService.cartItems;
+
+    let orderItems: OrderItem[] = cartItems.map(tempCartItem => new OrderItem(tempCartItem));
+
+    // set up purchase
+    let purchase = new Purchase();
+    
+    // populate purchase - customer
+    purchase.customer = this.checkoutFormGroup.controls['customer'].value;
+    
+    // populate purchase - shipping address
+    purchase.shippingAddress = this.checkoutFormGroup.controls['shippingAddress'].value;
+    const shippingState: Town = JSON.parse(JSON.stringify(purchase.shippingAddress.town));
+    const shippingCountry: Country = JSON.parse(JSON.stringify(purchase.shippingAddress.country));
+    purchase.shippingAddress.town = shippingState.name;
+    purchase.shippingAddress.country = shippingCountry.name;
+
+    // populate purchase - billing address
+    purchase.billingAddress = this.checkoutFormGroup.controls['billingAddress'].value;
+    const billingState: Town = JSON.parse(JSON.stringify(purchase.billingAddress.town));
+    const billingCountry: Country = JSON.parse(JSON.stringify(purchase.billingAddress.country));
+    purchase.billingAddress.town = billingState.name;
+    purchase.billingAddress.country = billingCountry.name;
+  
+    // populate purchase - order and orderItems
+    purchase.order = order;
+    purchase.orderItems = orderItems;
+
+    // call REST API via the CheckoutService
+    this.checkoutService.placeOrder(purchase).subscribe({
+        next: response => {
+          console.log("Order placed successfully")
+          alert(`Your order has been received.\nOrder tracking number: ${response.orderTrackingNumber}`);
+
+          // reset cart
+          this.resetCart();
+
+        },
+        error: err => {
+          alert(`There was an error: ${err.message}`);
+        }
+      }
+    );
+
+  }
+
+  resetCart() {
+    console.log("Cart has been reset");
+
+    //reset cart data
+    this.cartService.cartItems = []; // Set cart items to an empty array
+    this.cartService.totalPrice.next(0); // Send out 0 as the total price
+    this.cartService.totalQuantity.next(0); // Send out 0 as the total quantity
+
+    //reset the form
+    this.checkoutFormGroup.reset();
+
+    //navigate back to the products page
+    this.router.navigateByUrl("/products");
+
   }
 
   getTowns(formGroupName: string) {

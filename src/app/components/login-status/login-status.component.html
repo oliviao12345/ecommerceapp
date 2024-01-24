@@ -9,4 +9,7 @@
    
     <!-- if user IS auth then show logout button-->
     <button *ngIf="isAuthenticated" (click)="logout()" class="security-btn">Logout</button>
+   
+    <!-- Members Button ADDED-->
+    <button *ngIf="isAuthenticated"routerLink="/members" class="security-btn">Member</button>
 </div>

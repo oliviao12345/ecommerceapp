@@ -1,0 +1,12 @@
+  
+  /* Center the widget */
+  #okta-sign-in-widget {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Align to the top */
+    height: 100vh;
+    border: 1px solid black;
+    background-color: rgb(217, 215, 215);
+  }
+  
+

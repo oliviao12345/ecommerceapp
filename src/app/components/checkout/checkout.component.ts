@@ -259,6 +259,9 @@ export class CheckoutComponent implements OnInit {
   onSubmit() {
     console.log("Handling the submit button");
 
+    
+
+
     // set up order
     let order = new Order(this.totalPrice, this.totalQuantity);
     order.totalPrice = this.totalPrice;

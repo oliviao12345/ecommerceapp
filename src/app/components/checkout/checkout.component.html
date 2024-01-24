@@ -261,14 +261,16 @@
           </div>
           <input formControlName="cardNumber" type="text" />
           <div *ngIf="ccCardNumber?.invalid && (ccCardNumber?.dirty || ccCardNumber?.touched)" class="alert alert-danger">
-            <div *ngIf="ccCardNumber?.errors?.['required'] || ccCardNumber?.errors?.['notOnlyWhitespace']">
+            <div *ngIf="ccCardNumber?.errors?.['required']">
               Card Number is required
             </div>
-            <div *ngIf="ccNameOnCard?.errors?.['minLength']">
-               Card Number must be at least 16 Digits long
+            <div *ngIf="ccCardNumber?.errors?.['minlength']">
+              Card Number must be at least 16 digits long
             </div>
+            
           </div>
         </div>
+        
         <div class="row">
           <div class="col-md-2">
             <label>Expiration Month</label>

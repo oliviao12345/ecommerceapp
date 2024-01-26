@@ -1,9 +1,6 @@
 package com.ecommerce.backend.SpringEcommerceAppBackend.config;
 
-import com.ecommerce.backend.SpringEcommerceAppBackend.entity.Country;
-import com.ecommerce.backend.SpringEcommerceAppBackend.entity.Product;
-import com.ecommerce.backend.SpringEcommerceAppBackend.entity.ProductCategory;
-import com.ecommerce.backend.SpringEcommerceAppBackend.entity.Town;
+import com.ecommerce.backend.SpringEcommerceAppBackend.entity.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.metamodel.EntityType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +37,8 @@ public class MyDataRestConfig implements RepositoryRestConfigurer {
         disableHttpMethods(Product.class,config, theUnsupportedActions);
         disableHttpMethods(Country.class,config, theUnsupportedActions);
         disableHttpMethods(Town.class,config, theUnsupportedActions);
+
+        disableHttpMethods(Order.class, config, theUnsupportedActions); //<Make Order Repo Read Only
 
         // Call an Internal Helper Method
         exposeIds(config);

@@ -105,6 +105,12 @@ export class CartService {
     if (alreadyExistsInCart) {
       if (existingCartItem != null) {
         existingCartItem.quantity--;
+        if(existingCartItem.quantity == 0){
+          const index = this.cartItems.indexOf(existingCartItem);
+          if (index != -1){
+            this.cartItems.splice(index,1);
+          }
+        }
       }
     } else {
       this.cartItems.push(theCartItem);

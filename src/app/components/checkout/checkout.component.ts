@@ -30,7 +30,8 @@ export class CheckoutComponent implements OnInit {
   countries: Country[] = []; // Initialize an array to store countries
   shippingAddressTowns: Town[] = []; // Initialize an array to store shipping address towns
   billingAddressTowns: Town[] = []; // Initialize an array to store billing address towns
-
+  storage: Storage = sessionStorage; //Reference to browser session storage
+  
   constructor(
     private formBuilder: FormBuilder,
     private formService: FormService,
@@ -40,6 +41,9 @@ export class CheckoutComponent implements OnInit {
   ) {} // Inject the form builder, form service, and cart service
   ngOnInit(): void {
     this.reviewCartDetails();
+
+    //read the users email address from browser storage
+    const theEmail = JSON.parse(this.storage.getItem('userEmail')!);
 
     this.checkoutFormGroup = this.formBuilder.group({
       customer: this.formBuilder.group({
@@ -53,7 +57,7 @@ export class CheckoutComponent implements OnInit {
           Validators.minLength(2),
           CustomValidators.notOnlyWhitespace,
         ]),
-        email: new FormControl('', [
+        email: new FormControl(theEmail, [
           Validators.required,
           Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$'),
           CustomValidators.notOnlyWhitespace,

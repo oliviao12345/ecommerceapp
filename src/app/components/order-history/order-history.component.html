@@ -1,0 +1,27 @@
+<h3>Your Orders</h3>
+
+<div *ngIf="orderHistoryList.length > 0"> <!-- Checking if the orderHistoryList has items -->
+    <table class="table table-bordered"> <!-- Creating a table with bordered style -->
+        <tr> <!-- Creating a table row -->
+            <th width="20%">Order Tracking Number</th> <!-- Creating a table header cell with width 20% -->
+            <th width="10%">Total Price</th> <!-- Creating a table header cell with width 10% -->
+            <th width="10%">Total Quantity</th> <!-- Creating a table header cell with width 10% -->
+            <th width="10%">Date</th> <!-- Creating a table header cell with width 10% -->
+        </tr>
+
+        <tr *ngFor="let tempOrderHistory of orderHistoryList"> <!-- Iterating over each item in orderHistoryList -->
+            <td>
+                {{ tempOrderHistory.orderTrackingNumber}} <!-- Displaying the order tracking number for each item -->
+            </td>
+            <td>
+                {{ tempOrderHistory.totalPrice | currency: 'USD'}} <!-- Displaying the total price for each item in USD currency format -->
+            </td>
+            <td>
+                {{ tempOrderHistory.totalQuantity}} <!-- Displaying the total quantity for each item -->
+            </td>
+            <td>
+                {{ tempOrderHistory.dateCreated | date: 'medium'}} <!-- Displaying the date created for each item in medium date format -->
+            </td>
+        </tr>
+    </table> 
+</div>

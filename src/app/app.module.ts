@@ -20,6 +20,8 @@ import { OktaAuth } from '@okta/okta-auth-js';
 import myAppConfig from 'src/app/authentication/my-app-config';
 import { ProductService } from './services/product.service';
 import { MembersPageComponent } from './components/members-page/members-page.component';
+import { OrderHistoryComponent } from './components/order-history/order-history.component';
+import { OrderHistory } from './common/order-history';
 
 const oktaConfig = myAppConfig.oidc;
 const oktaAuth = new OktaAuth(oktaConfig);
@@ -35,6 +37,8 @@ function sendToLoginPage(oktaAuth: OktaAuth, injector: Injector){
 
 // Define an array of routes for the application ORDER FROM SPECIFIC TO GENERIC
 const routes: Routes = [
+  {path: 'order-history', component: OrderHistoryComponent, canActivate: [OktaAuthGuard], 
+  data: {onAuthRequired: sendToLoginPage} },
   {path: 'members', component: MembersPageComponent, canActivate: [OktaAuthGuard],
 data: {onAuthRequired: sendToLoginPage}},
   {path: 'login/callback', component: OktaCallbackComponent},
@@ -58,7 +62,7 @@ data: {onAuthRequired: sendToLoginPage}},
 
 @NgModule({
   // Declare the components used in the module
-  declarations: [AppComponent, ProductListComponent, ProductCategoryMenuComponent, SearchComponent, ProductDetailsComponent, CartStatusComponent, CartDetailsComponent, CheckoutComponent, LoginComponent, LoginStatusComponent, MembersPageComponent],
+  declarations: [AppComponent, ProductListComponent, ProductCategoryMenuComponent, SearchComponent, ProductDetailsComponent, CartStatusComponent, CartDetailsComponent, CheckoutComponent, LoginComponent, LoginStatusComponent, MembersPageComponent, OrderHistoryComponent],
   // Import necessary modules and specify the defined routes
   imports: [
     RouterModule.forRoot(routes),

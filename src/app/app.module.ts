@@ -1,6 +1,6 @@
 import { Injector, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { ProductListComponent } from './product-list/product-list.component';
@@ -22,6 +22,7 @@ import { ProductService } from './services/product.service';
 import { MembersPageComponent } from './components/members-page/members-page.component';
 import { OrderHistoryComponent } from './components/order-history/order-history.component';
 import { OrderHistory } from './common/order-history';
+import { AuthInterceptorService } from './services/auth-interceptor.service';
 
 const oktaConfig = myAppConfig.oidc;
 const oktaAuth = new OktaAuth(oktaConfig);
@@ -73,7 +74,10 @@ data: {onAuthRequired: sendToLoginPage}},
     OktaAuthModule
   ],
   // Provide any services or dependencies
-  providers: [ProductService, {provide: OKTA_CONFIG, useValue: {oktaAuth}}],
+  providers: [ProductService,
+     {provide: OKTA_CONFIG, useValue: {oktaAuth}}, 
+     //Token for HTTP Interceptors -- Register our AuthInterc SVC as an HTTP interceptor
+     {provide: HTTP_INTERCEPTORS, useClass:AuthInterceptorService, multi: true}],
   // Bootstrap the root component of the application
   bootstrap: [AppComponent],
 })

@@ -9,7 +9,7 @@ import java.util.List;
 
 
 @RepositoryRestResource
-//this will expose the /states endpoint
+//this will expose the /towns endpoint
 public interface TownRepository extends JpaRepository<Town, Integer> {
 
     //Find towns by country code

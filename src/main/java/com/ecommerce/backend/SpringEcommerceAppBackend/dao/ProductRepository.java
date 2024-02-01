@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
+//@CrossOrigin("https://localhost:4200")
 @RepositoryRestResource
 public interface ProductRepository extends JpaRepository<Product,Long> {
 

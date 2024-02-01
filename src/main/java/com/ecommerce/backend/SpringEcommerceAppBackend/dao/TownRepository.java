@@ -7,7 +7,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 import java.util.List;
 
-
+//@CrossOrigin("https://localhost:4200")
 @RepositoryRestResource
 //this will expose the /towns endpoint
 public interface TownRepository extends JpaRepository<Town, Integer> {

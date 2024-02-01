@@ -21,7 +21,6 @@ import myAppConfig from 'src/app/authentication/my-app-config';
 import { ProductService } from './services/product.service';
 import { MembersPageComponent } from './components/members-page/members-page.component';
 import { OrderHistoryComponent } from './components/order-history/order-history.component';
-import { OrderHistory } from './common/order-history';
 import { AuthInterceptorService } from './services/auth-interceptor.service';
 
 const oktaConfig = myAppConfig.oidc;

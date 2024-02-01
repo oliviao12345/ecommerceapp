@@ -18,7 +18,7 @@ export class AuthInterceptorService implements HttpInterceptor {
   // Handle access to secured endpoints
   private async handleAccess(request: HttpRequest<any>, next: HttpHandler): Promise<HttpEvent<any>> {
     // Only add an access token for secured endpoints
-    const securedEndpoints = ['http://localhost:1235/api/orders'];
+    const securedEndpoints = ['https://localhost:1235/api/orders'];
 
     if (securedEndpoints.some(url => request.urlWithParams.includes(url))) {
       // Get access token from OktaAuth

@@ -1,0 +1,8 @@
+{
+    "/api": {
+      "target": "https://dev-33784196.okta.com",
+      "secure": true,
+      "changeOrigin": true
+    }
+  }
+  

@@ -4,13 +4,14 @@ import { Observable } from 'rxjs';
 import { Product } from '../common/product';
 import { map } from 'rxjs/operators';
 import { ProductCategory } from '../common/product-category';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductService {
-  private categoryURL = 'http://localhost:1235/api/product-category'; // Spring Boot URL
-  private baseUrl = 'http://localhost:1235/api/products'; // Spring Boot URL
+  private categoryURL = environment.luv2shopApiUrl + 'product-category'; // Spring Boot URL
+  private baseUrl = environment.luv2shopApiUrl + 'products'; // Spring Boot URL
 
   constructor(private httpClient: HttpClient) {}
 

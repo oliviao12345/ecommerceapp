@@ -15,6 +15,8 @@ import { Router } from '@angular/router'; // Correct import statement
 import { OrderItem } from 'src/app/common/order-item';
 import { Order } from 'src/app/common/order';
 import { Purchase } from 'src/app/common/purchase';
+import { environment } from 'src/environments/environment';
+import { PaymentInfo } from 'src/app/common/payment-info';
 
 @Component({
   selector: 'app-checkout',
@@ -31,7 +33,12 @@ export class CheckoutComponent implements OnInit {
   shippingAddressTowns: Town[] = []; // Initialize an array to store shipping address towns
   billingAddressTowns: Town[] = []; // Initialize an array to store billing address towns
   storage: Storage = sessionStorage; //Reference to browser session storage
-  
+  stripe = Stripe(environment.stripePublishableKey);
+
+  paymentInfo: PaymentInfo = new PaymentInfo();
+  cardElement: any;
+  displayError: any = "";
+
   constructor(
     private formBuilder: FormBuilder,
     private formService: FormService,
@@ -40,6 +47,7 @@ export class CheckoutComponent implements OnInit {
     private router: Router
   ) {} // Inject the form builder, form service, and cart service
   ngOnInit(): void {
+    this.setUpStripePaymentForm();
     this.reviewCartDetails();
 
     //read the users email address from browser storage
@@ -151,6 +159,32 @@ export class CheckoutComponent implements OnInit {
       this.creditCardYears = data;
     });
   }
+  setUpStripePaymentForm() {
+    // Get a handle to the Stripe elements object
+    var elements = this.stripe.elements();
+
+    // Create a card element and configure it to hide the zip-code field
+    this.cardElement = elements.create('card', { hidePostalCode: true });
+
+    // Mount the card element UI component into the div with id 'card-element'
+    this.cardElement.mount('#card-element');
+
+    // Add an event listener for the 'change' event on the card element
+    this.cardElement.on('change', (event: any) => {
+        // Get a reference to the element where card errors will be displayed
+        this.displayError = document.getElementById('card-errors');
+
+        // Check if the card entry is complete
+        if (event.complete) {
+            // Clear any existing error messages
+            this.displayError.textContent = "";
+        } else if (event.error) {
+            // Display the error message if there is an issue with the card information
+            this.displayError.textContent = event.error.message;
+        }
+    });
+}
+
   reviewCartDetails() {
     //subscribe to cartService.totalQuantity
     this.cartService.totalQuantity.subscribe(
@@ -263,9 +297,37 @@ export class CheckoutComponent implements OnInit {
   onSubmit() {
     console.log("Handling the submit button");
 
+    // compute payment info
+    this.paymentInfo.amount = this.totalPrice * 100;
+    this.paymentInfo.currency = "USD";
+
+    this.checkoutService.createPaymentIntent(this.paymentInfo).subscribe(
+      (paymentIntentResponse) => {
+        this.stripe.confirmCardPayment(paymentIntentResponse.client_secret,
+          {
+            payment_method: {
+              card: this.cardElement
+            }
+          }, { handleActions: false })
+          .then((result: any) => {
+            if (result.error) {
+              alert (`There was an error: ${result.error.message}`);
+            } else {
+              this.checkoutService.placeOrder(purchase).subscribe({
+                next: (response: any) => {
+                  alert(`Your order has been received. \nOrder Tracking number: ${response.orderTrackingNumber}`);
+
+                  this.resetCart();
+                },
+                error: (err: any) => {
+                  alert(`There was an error: ${err.message}`);
+                }
+              });
+            }
+          });
+      }
+    );
     
-
-
     // set up order
     let order = new Order(this.totalPrice, this.totalQuantity);
     order.totalPrice = this.totalPrice;

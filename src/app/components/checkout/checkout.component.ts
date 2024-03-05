@@ -37,7 +37,7 @@ export class CheckoutComponent implements OnInit {
 
   paymentInfo: PaymentInfo = new PaymentInfo();
   cardElement: any;
-  displayError: any = "";
+  displayError: any = '';
 
   constructor(
     private formBuilder: FormBuilder,
@@ -109,54 +109,16 @@ export class CheckoutComponent implements OnInit {
           CustomValidators.notOnlyWhitespace,
         ]),
       }),
+
       creditCard: this.formBuilder.group({
-        cardType: new FormControl('', [Validators.required]),
-        nameOnCard: new FormControl('', [
-          Validators.required,
-          Validators.minLength(2),
-          CustomValidators.notOnlyWhitespace,
-        ]),
-        cardNumber: new FormControl('', [
-          Validators.required,
-          Validators.pattern('[0-9]{16}'), // 16 Digits Max between 0 -9
-        ]),
-        securityCode: new FormControl('', [
-          Validators.required,
-          Validators.pattern('[0-9]{3}'), // 3 Digits Max between 0-9
-        ]),
-        expMonth: new FormControl('', [Validators.required]),
-        expYear: new FormControl('', [Validators.required]),
-      }),
+
+      })
     });
 
     //Populate the countries
     this.formService.getCountries().subscribe((data) => {
       console.log('Retrieved countries: ' + JSON.stringify(data));
       this.countries = data;
-    });
-
-    // Get the current month and assign it to the variable startMonth
-    const startMonth: number = new Date().getMonth() + 1;
-
-    // Log the value of startMonth to the console
-    console.log('startMonth: ' + startMonth);
-
-    // Call the getCreditCardMonths function of the formService and subscribe to the returned Observable
-    this.formService.getCreditCardMonths(startMonth).subscribe((data) => {
-      // Log the retrieved credit card months to the console as a JSON string
-      console.log('Retrieved credit card months: ' + JSON.stringify(data));
-
-      // Assign the retrieved credit card months to the creditCardMonths property
-      this.creditCardMonths = data;
-    });
-
-    // Call the getCreditCardYears function of the formService and subscribe to the returned Observable
-    this.formService.getCreditCardYears().subscribe((data) => {
-      // Log the retrieved credit card years to the console as a JSON string
-      console.log('Retrieved credit card years: ' + JSON.stringify(data));
-
-      // Assign the retrieved credit card years to the creditCardYears property
-      this.creditCardYears = data;
     });
   }
   setUpStripePaymentForm() {
@@ -171,19 +133,19 @@ export class CheckoutComponent implements OnInit {
 
     // Add an event listener for the 'change' event on the card element
     this.cardElement.on('change', (event: any) => {
-        // Get a reference to the element where card errors will be displayed
-        this.displayError = document.getElementById('card-errors');
+      // Get a reference to the element where card errors will be displayed
+      this.displayError = document.getElementById('card-errors');
 
-        // Check if the card entry is complete
-        if (event.complete) {
-            // Clear any existing error messages
-            this.displayError.textContent = "";
-        } else if (event.error) {
-            // Display the error message if there is an issue with the card information
-            this.displayError.textContent = event.error.message;
-        }
+      // Check if the card entry is complete
+      if (event.complete) {
+        // Clear any existing error messages
+        this.displayError.textContent = '';
+      } else if (event.error) {
+        // Display the error message if there is an issue with the card information
+        this.displayError.textContent = event.error.message;
+      }
     });
-}
+  }
 
   reviewCartDetails() {
     //subscribe to cartService.totalQuantity
@@ -210,7 +172,7 @@ export class CheckoutComponent implements OnInit {
     return this.checkoutFormGroup.get('creditCard.cardNumber');
   }
   get ccExpMonth() {
-    return this.checkoutFormGroup.get('creditCard.expirationMontn');
+    return this.checkoutFormGroup.get('creditCard.expirationMonth');
   }
   get ccExpYear() {
     return this.checkoutFormGroup.get('creditCard.expirationYear');
@@ -295,39 +257,8 @@ export class CheckoutComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log("Handling the submit button");
+    console.log('Handling the submit button');
 
-    // compute payment info
-    this.paymentInfo.amount = this.totalPrice * 100;
-    this.paymentInfo.currency = "USD";
-
-    this.checkoutService.createPaymentIntent(this.paymentInfo).subscribe(
-      (paymentIntentResponse) => {
-        this.stripe.confirmCardPayment(paymentIntentResponse.client_secret,
-          {
-            payment_method: {
-              card: this.cardElement
-            }
-          }, { handleActions: false })
-          .then((result: any) => {
-            if (result.error) {
-              alert (`There was an error: ${result.error.message}`);
-            } else {
-              this.checkoutService.placeOrder(purchase).subscribe({
-                next: (response: any) => {
-                  alert(`Your order has been received. \nOrder Tracking number: ${response.orderTrackingNumber}`);
-
-                  this.resetCart();
-                },
-                error: (err: any) => {
-                  alert(`There was an error: ${err.message}`);
-                }
-              });
-            }
-          });
-      }
-    );
-    
     // set up order
     let order = new Order(this.totalPrice, this.totalQuantity);
     order.totalPrice = this.totalPrice;
@@ -336,52 +267,95 @@ export class CheckoutComponent implements OnInit {
     // get cart items
     const cartItems = this.cartService.cartItems;
 
-    let orderItems: OrderItem[] = cartItems.map(tempCartItem => new OrderItem(tempCartItem));
+    let orderItems: OrderItem[] = cartItems.map(
+      (tempCartItem) => new OrderItem(tempCartItem)
+    );
 
     // set up purchase
     let purchase = new Purchase();
-    
+
     // populate purchase - customer
     purchase.customer = this.checkoutFormGroup.controls['customer'].value;
-    
+
     // populate purchase - shipping address
-    purchase.shippingAddress = this.checkoutFormGroup.controls['shippingAddress'].value;
-    const shippingState: Town = JSON.parse(JSON.stringify(purchase.shippingAddress.town));
-    const shippingCountry: Country = JSON.parse(JSON.stringify(purchase.shippingAddress.country));
+    purchase.shippingAddress =
+      this.checkoutFormGroup.controls['shippingAddress'].value;
+    const shippingState: Town = JSON.parse(
+      JSON.stringify(purchase.shippingAddress.town)
+    );
+    const shippingCountry: Country = JSON.parse(
+      JSON.stringify(purchase.shippingAddress.country)
+    );
     purchase.shippingAddress.town = shippingState.name;
     purchase.shippingAddress.country = shippingCountry.name;
 
     // populate purchase - billing address
-    purchase.billingAddress = this.checkoutFormGroup.controls['billingAddress'].value;
-    const billingState: Town = JSON.parse(JSON.stringify(purchase.billingAddress.town));
-    const billingCountry: Country = JSON.parse(JSON.stringify(purchase.billingAddress.country));
+    purchase.billingAddress =
+      this.checkoutFormGroup.controls['billingAddress'].value;
+    const billingState: Town = JSON.parse(
+      JSON.stringify(purchase.billingAddress.town)
+    );
+    const billingCountry: Country = JSON.parse(
+      JSON.stringify(purchase.billingAddress.country)
+    );
     purchase.billingAddress.town = billingState.name;
     purchase.billingAddress.country = billingCountry.name;
-  
+
     // populate purchase - order and orderItems
     purchase.order = order;
     purchase.orderItems = orderItems;
 
+    // compute payment info
+    this.paymentInfo.amount = this.totalPrice * 100;
+    this.paymentInfo.currency = 'GBP';
+
     // call REST API via the CheckoutService
-    this.checkoutService.placeOrder(purchase).subscribe({
-        next: response => {
-          console.log("Order placed successfully")
-          alert(`Your order has been received.\nOrder tracking number: ${response.orderTrackingNumber}`);
+    if (
+      !this.checkoutFormGroup.invalid &&
+      this.displayError.textContent === ''
+    ) {
+      this.checkoutService
+        .createPaymentIntent(this.paymentInfo)
+        .subscribe((paymentIntentResponse) => {
+          this.stripe
+            .confirmCardPayment(
+              paymentIntentResponse.client_secret,
+              {
+                payment_method: {
+                  card: this.cardElement,
+                },
+              },
+              { handleActions: false }
+            )
+            .then((result: any) => {
+              if (result.error) {
+                // inform the customer there was an error
+                alert(`There was an errror: ${result.error.message}`);
+              } else {
+                this.checkoutService.placeOrder(purchase).subscribe({
+                  next: (response: any) => {
+                    alert(
+                      `Your order has been received. \nOrder tracking number ${response.orderTrackingNumber}`
+                    );
 
-          // reset cart
-          this.resetCart();
-
-        },
-        error: err => {
-          alert(`There was an error: ${err.message}`);
-        }
-      }
-    );
-
+                    //reset cart
+                    this.resetCart();
+                  },
+                  error: (err: any) => {
+                    alert(`There was an error: ${err.message}`);
+                  },
+                });
+              }
+            });
+        });
+    } else {
+      this.checkoutFormGroup.markAllAsTouched();
+      return;
+    }
   }
 
   resetCart() {
-    console.log("Cart has been reset");
+    console.log('Cart has been reset');
 
     //reset cart data
     this.cartService.cartItems = []; // Set cart items to an empty array
@@ -392,8 +366,7 @@ export class CheckoutComponent implements OnInit {
     this.checkoutFormGroup.reset();
 
     //navigate back to the products page
-    this.router.navigateByUrl("/products");
-
+    this.router.navigateByUrl('/products');
   }
 
   getTowns(formGroupName: string) {

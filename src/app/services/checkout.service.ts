@@ -12,7 +12,7 @@ export class CheckoutService {
 
   private purchaseUrl = 'http://localhost:1235/api/checkout/purchase';
 
-  private paymentIntUrl = environment.luv2shopApiUrl + '/checkout/payment-intent';
+  private paymentIntUrl = environment.luv2shopApiUrl + 'checkout/payment-intent';
 
   constructor(private httpClient: HttpClient) { }
   // The constructor is a special method that is automatically called when an instance of the class is created.

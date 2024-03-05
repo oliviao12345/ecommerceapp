@@ -222,104 +222,20 @@
         </div>
       </div>
   
-      <!-- CREDIT CARD FORM -->
+    
+      <!-- Stripe Elements Credit Card Section -->
       <div formGroupName="creditCard" class="form-area">
-        <h3>Credit Card</h3>
-  
-        <div class="row">
-          <div class="col-md-2">
-            <label>Card Type</label>
-          </div>
-          <!-- Dropdown for Card Type -->
-          <select formControlName="cardType">
-            <option value="visa">Visa</option>
-            <option value="mastercard">Mastercard</option>
-            <option value="amex">American Express</option>
-            <option value="discover">Discover</option>
-            <option value="other">Other</option>
-          </select>
-          <!-- End of Dropdown for Card Type -->
-        </div>
-        <div class="row">
-          <div class="col-md-2">
-            <label>Name on Card</label>
-          </div>
-          <input formControlName="nameOnCard" type="text" />
-          <div *ngIf="ccNameOnCard?.invalid && (ccNameOnCard?.dirty || ccNameOnCard?.touched)" class="alert alert-danger">
-            <div *ngIf="ccNameOnCard?.errors?.['required'] || ccNameOnCard?.errors?.['notOnlyWhitespace']">
-              Name on card is required
-            </div>
-            <div *ngIf="ccNameOnCard?.errors?.['minLength']">
-               Name on card must be at least 2 characters long
-            </div>
-          </div>
+        <h3> Credit or Debit Card</h3>
 
+        <div id="card-element">
+          <!-- A stripe element will be inserted here -->
         </div>
-        <div class="row">
-          <div class="col-md-2">
-            <label>Card Number</label>
-          </div>
-          <input formControlName="cardNumber" type="text" />
-          <div *ngIf="ccCardNumber?.invalid && (ccCardNumber?.dirty || ccCardNumber?.touched)" class="alert alert-danger">
-            <div *ngIf="ccCardNumber?.errors?.['required']">
-              Card Number is required
-            </div>
-            <div *ngIf="ccCardNumber?.errors?.['minlength']">
-              Card Number must be at least 16 digits long
-            </div>
-            
-          </div>
-        </div>
-        
-        <div class="row">
-          <div class="col-md-2">
-            <label>Expiration Month</label>
-          </div>
-          <!-- Populate drop down list with checkout.ts Component "creditCardMonths" -->
-          <select formControlName="expMonth">
-            <option *ngFor="let month of creditCardMonths">
-            {{ month }}
-            </option>
-          </select>
-          <div *ngIf="ccExpMonth?.invalid && (ccExpMonth?.dirty || ccExpMonth?.touched)" class="alert alert-danger">
-            <div *ngIf="ccExpMonth?.errors?.['required'] || ccExpMonth?.errors?.['notOnlyWhitespace']">
-            Expiration Month is Required
-            </div>
-        </div>
-        </div>
-        <div class="row">
-          <div class="col-md-2">
-            <!-- Create a column with a width of 2 columns -->
-            <label>Expiration Year</label>
-          </div>
-        <!-- Populate drop down list with checkout.ts Component "creditCardYears" -->
-          <select formControlName="expYear" (change)="handleMonthsAndYears()">
-           <option *ngFor="let year of creditCardYears">
-            {{ year }}
-        </option>
-          </select>
-          <div *ngIf="ccExpYear?.invalid && (ccExpYear?.dirty || ccExpYear?.touched)" class="alert alert-danger">
-            <div *ngIf="ccExpYear?.errors?.['required'] || ccExpYear?.errors?.['notOnlyWhitespace']">
-            Expiration year is Required
-            </div>
-        </div>
-        </div>
-        <div class="row">
-          <div class="col-md-2">
-            <label>Security Code</label>
-          </div>
-          <input formControlName="securityCode" type="text" />
-          <div *ngIf="ccSecCode?.invalid && (ccSecCode?.dirty || ccSecCode?.touched)" class="alert alert-danger">
-            <div *ngIf="ccSecCode?.errors?.['required'] || ccSecCode?.errors?.['notOnlyWhitespace']">
-              Security Code is required
-            </div>
-            <div *ngIf="ccNameOnCard?.errors?.['minLength']">
-               Security Code must be at least 3 Digits long
-            </div>
-          </div>
-        </div>
+
+        <!-- Used to display form errors -->
+        <div id="card-errors" 
+        class="displayError.textContent!=='': alert alert-danger mt-1"></div>
       </div>
-  
+
       <!-- ORDER DETAILS -->
       <div class="form-area">
         <div class="col mt-4">
